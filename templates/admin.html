@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel</title>
+  <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 1em;
+      text-align: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    nav a:hover {
+      color: #ddd;
+    }
+
+    h2 {
+      text-align: center;
+      color: #4CAF50;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+
+    #clientList {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+    }
+
+    #clientList li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      background-color: #fff;
+      width: 50%;
+      margin: 0 auto;
+    }
+
+    #clientList li:last-child {
+      border-bottom: none;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-left: 10px;
+    }
+
+    button:hover {
+      background-color: #3e8e41;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="#">Admin Panel</a>
+    <a href="/">screen</a>
+  </nav>
+  <h2>Connected Clients</h2>
+  <ul id="clientList"></ul>
+
+  <script>
+    const socket = io('/admin');
+
+    socket.on('clients_update', clients => {
+      const list = document.getElementById('clientList');
+      list.innerHTML = '';
+      Object.entries(clients).forEach(([sid, name]) => {
+        const li = document.createElement('li');
+        li.innerHTML = name + ' <button onclick="trigger(\'' + sid + '\')">Start Stream</button>';
+        list.appendChild(li);
+      });
+    });
+
+    function trigger(sid) {
+      socket.emit('trigger_stream', { sid });
+    }
+  </script>
+</body>
+</html>
