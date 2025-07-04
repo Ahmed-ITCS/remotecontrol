@@ -40,5 +40,5 @@ def send_frames():
             sio.emit('frame', {'image': encoded}, namespace='/client')
             time.sleep(0.3)  # ~3 FPS
 
-sio.connect('http://127.0.0.1:5005', namespaces=['/client'])
+sio.connect('http://192.168.1.27:5005', namespaces=['/client'])
 sio.wait()
